@@ -10,13 +10,13 @@ def main():
     """
     vowels = "aeiou"
     string = input("Enter a string: ")
-    count = 0
+    count_vowels = 0
     for i in string:
         if i in vowels:
-            count += 1
-    print("The number of vowels in the string is "+str(count))
+            count_vowels += 1
+    print("The number of vowels in the string is "+str(count_vowels))
     for i in vowels:
-        print(i+" : "+str(string.count(i))+" times.")
+        print(i+" : "+str(string.count_vowels(i))+" times.")
 
 
 main()
