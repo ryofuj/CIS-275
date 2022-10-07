@@ -1,28 +1,7 @@
 '''
-Create the following classes: Person, Employee, Faculty, and Student
-
-Person should have:
-
-    name
-    age
-    address
-
-Student should be a subclass of Person and have:
-
-    Student ID
-    Grade Level
-
-Employee should be a subclass of Person and have:
-
-    Salary
-    Years on the Job
-
-Faculty should be a subclass of Employee and have:
-
-    Faculty ID
-    Subject taught
-
-Have each class override the __str__ method, printing all of its attributes (including any inherited ones).  In your main function, demonstrate creating one of each type of object (and print each as well)
+Ryo Fujimura
+Lab 5
+CIS275C
 '''
 
 class Person:
@@ -60,8 +39,8 @@ class Faculty(Employee):
 def main():
     person = Person("John", 20, "123 Main St")
     student = Student("Jane", 18, "456 Main St", 12345, 12)
-    employee = Employee("Bob", 40, "789 Main St", 50000, 10)
-    faculty = Faculty("Sue", 35, "1011 Main St", 60000, 15, 123, "Math")
+    employee = Employee("Bob", 22, "789 Main St", 500000, 10)
+    faculty = Faculty("Sue", 23, "111 Main St", 600000, 15, 123, "Math")
     print(person)
     print(student)
     print(employee)
@@ -70,3 +49,10 @@ def main():
 if __name__ == "__main__":
     main()
 
+'''
+Output:
+Name: John, Age: 20, Address: 123 Main St
+Name: Jane, Age: 18, Address: 456 Main St, Student ID: 12345, Grade Level: 12
+Name: Bob, Age: 22, Address: 789 Main St, Salary: 500000, Years on Job: 10
+Name: Sue, Age: 23, Address: 111 Main St, Salary: 600000, Years on Job: 15, Faculty ID: 123, Subject: Math
+'''
