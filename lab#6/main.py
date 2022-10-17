@@ -1,93 +1,118 @@
-'''
-Ryo Fujimura
-Lab Assignment #6
-CIS 275C
-'''
+class Conversion:
 
-from LinkedStack import LinkedStack
+	# Constructor to initialize the class variables
+	def __init__(self, capacity):
+		self.top = -1
+		self.capacity = capacity
+		# This array is used a stack
+		self.array = []
+		# Precedence setting
+		self.output = []
+		self.precedence = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
+	
+    
+    def is_balanced(self,exp):
+	    s = []
+	    for char in exp:
+	        if char in ['(', '[', '{']:
+	            s.append(char)
+	        elif char == '}':
+	           if len(s) == 0 or s[-1] != '{':
+	               return False
+	           else:
+	               s.pop()
+	        elif char == ')':
+	            if len(s) == 0 or s[-1] != '(':
+	                return False
+	            else:
+	                s.pop()
+	        elif char == ']':
+	            if len(s) == 0 or s[-1] != '[':
+	                return False
+	            else:
+	                s.pop()
+	    return True
+    	# check if the stack is empty
+	def isEmpty(self):
+		return True if self.top == -1 else False
 
-class InfixToPostfix:
-    def __init__(self):
-        """constructor"""
-        self._string = ""
-        self._postfix = ""
-        self._result = 0
+	# Return the value of the top of the stack
+	def peek(self):
+		return self.array[-1]
 
-    def precedence(ch):
-        """return the precedence of the operator"""
-        if ch == '*' or ch == '/':
-            return 2
-        elif ch == '+' or ch == '-':
-            return 1
-        else:
-            return 0
+	# Pop the element from the stack
+	def pop(self):
+		if not self.isEmpty():
+			self.top -= 1
+			return self.array.pop()
+		else:
+			return "$"
 
-    def is_balanced(string):
-        """check if the string is balanced"""
-        s = LinkedStack()
-        for ch in string:
-            if ch in ['(', '{', '[']:
-                s.push(ch)
-            elif ch in ['}']:
-                if s.is_empty() or s.pop() != '{':
-                    return False
-                else:
-                    s.pop()
-            elif ch in [']']:
-                if s.is_empty() or s.pop() != '[':
-                    return False
-                else:
-                    s.pop()
-            elif ch in [')']:
-                if s.is_empty() or s.pop() != '(':
-                    return False
-                else:
-                    s.pop()
-        return s.is_empty()
+	# Push the element to the stack
+	def push(self, op):
+		self.top += 1
+		self.array.append(op)
 
-    def convertToPostfix(string):
-        """convert the infix expression to postfix expression"""
-        stack = LinkedStack()
-        postfix = ""
-        for ch in string:
-            if ch == '(':
-                stack.push(ch)
-            elif ch == ')':
-                while not stack.is_empty() and stack.peek() != '(':
-                    postfix += stack.pop()
-                stack.pop()
-            elif ch in "*/+-":
-                while not stack.is_empty() and stack.peek() != '(' and InfixToPostfix.precedence(ch) <= InfixToPostfix.precedence(stack.peek()):
-                    postfix += stack.pop()
-                stack.push(ch)
-            else:
-                postfix += ch
-        while not stack.is_empty():
-            postfix += stack.pop()
+	# A utility function to check is the given character is an operand
+	def isOperand(self, ch):
+		return ch.isnumeric()
 
-        return postfix
+	# Check if the precedence of operator is strictly
+	# less than top of stack or not
+	def notGreater(self, i):
+		try:
+			a = self.precedence[i]
+			b = self.precedence[self.peek()]
+			return True if a <= b else False
+		except KeyError:
+			return False
 
-    def evaluatePostfix(string):
-        """evaluate the postfix expression"""
-        stack = LinkedStack()
-        for ch in string:
-            if ch in "0123456789":
-                stack.push(int(ch))
-            else:
-                if ch == '+':
-                    stack.push(stack.pop() + stack.pop())
-                elif ch == '-':
-                    stack.push(-stack.pop() + stack.pop())
-                elif ch == '*':
-                    stack.push(stack.pop() * stack.pop())
-                elif ch == '/':
-                    stack.push(1 / stack.pop() * stack.pop())
-        return stack.pop()
+	# The main function that
+	# converts given infix expression
+	# to postfix expression
+	def infixToPostfix(self, exp):
 
-if __name__ == "__main__":
-    string = input("Enter an infix expression: ")
-    if InfixToPostfix.is_balanced(string):
-        print("Postfix expression: ", InfixToPostfix.convertToPostfix(string))
-        print("Result: ", InfixToPostfix.evaluatePostfix(InfixToPostfix.convertToPostfix(string)))
-    else:
-        print("The infix expression is not balanced")
+		# Iterate over the expression for conversion
+		for i in exp:
+			# If the character is an operand,
+			# add it to output
+			if self.isOperand(i):
+				self.output.append(i)
+
+			# If the character is an '(', push it to stack
+			elif i == '(':
+				self.push(i)
+
+			# If the scanned character is an ')', pop and
+			# output from the stack until and '(' is found
+			elif i == ')':
+				while((not self.isEmpty()) and
+					self.peek() != '('):
+					a = self.pop()
+					self.output.append(a)
+				if (not self.isEmpty() and self.peek() != '('):
+					return -1
+				else:
+					self.pop()
+
+			# An operator is encountered
+			else:
+				while(not self.isEmpty() and self.notGreater(i)):
+					self.output.append(self.pop())
+				self.push(i)
+
+		# pop all the operator from the stack
+		while not self.isEmpty():
+			self.output.append(self.pop())
+
+		print("".join(self.output))
+
+
+# Driver's code
+if __name__ == '__main__':
+	exp = "(2+3)*(4+5)"
+	obj = Conversion(len(exp))
+	if obj.is_balanced(exp) == False:
+	    print('The expression is not balanced')
+	else:
+	    obj.infixToPostfix(exp)
