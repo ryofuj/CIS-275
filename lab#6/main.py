@@ -2,16 +2,20 @@
 Ryo Fujimura
 Lab Assignment #6
 CIS 275C
+driver file
 '''
 from InfixToPostfix import InfixToPostfix
 
 def main():
-    string = input("Enter an infix expression: ")
-    if InfixToPostfix.is_balanced(string):
-        print("Postfix expression: ", InfixToPostfix.convertToPostfix(string))
-        print("Result: ", InfixToPostfix.evaluatePostfix(InfixToPostfix.convertToPostfix(string)))
-    else:
-        print("The infix expression is not balanced")
+    while True:
+        print("Enter an infix expression ('q' to quit):")
+        string = input()
+        if string == 'q':
+            break
+        if InfixToPostfix.is_balanced(string):
+            print("Postfix form: " + InfixToPostfix.convertToPostfix(string))
+        else:
+            print("The expression is not balanced.")
 
 if __name__ == "__main__":
     main()
