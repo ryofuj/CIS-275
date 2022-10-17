@@ -83,11 +83,3 @@ class InfixToPostfix:
                 elif ch == '/':
                     stack.push(1 / stack.pop() * stack.pop())
         return stack.pop()
-
-if __name__ == "__main__":
-    string = input("Enter an infix expression: ")
-    if InfixToPostfix.is_balanced(string):
-        print("Postfix expression: ", InfixToPostfix.convertToPostfix(string))
-        print("Result: ", InfixToPostfix.evaluatePostfix(InfixToPostfix.convertToPostfix(string)))
-    else:
-        print("The infix expression is not balanced")
