@@ -1,6 +1,8 @@
 import random
 
+
 class Customer:
+    """ Represents a single customer waiting in line to buy a movie ticket """
 
     @classmethod
     def generate_customer(cls, probability_of_arrival, current_time):
@@ -29,6 +31,3 @@ class Customer:
     def serve(self):
         """ Customer has been served by cashier for one unit of time """
         self._transaction_time -= 1
-
-    def __str__(self):
-        return f'Customer: Arrival Time: {self._arrival_time}, Transaction Time: {self._transaction_time}'

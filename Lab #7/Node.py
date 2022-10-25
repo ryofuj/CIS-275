@@ -5,4 +5,3 @@ class Node:
         """ By default, this Node will not link to another Node """
         self._data = data
         self._next = next
-
