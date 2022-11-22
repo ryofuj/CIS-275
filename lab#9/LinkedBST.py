@@ -25,8 +25,8 @@ class LinkedBST(AbstractCollection):
 			else:
 				# Recursive Step 2: Move right
 				return recurse(node.right)
-
 		return recurse(self._root)
+
 
 	def add(self, item):
 		def recurse(node):
@@ -63,3 +63,24 @@ class LinkedBST(AbstractCollection):
 				recurse(node.right)
 
 		recurse(self._root)
+
+	def preorder(self):
+		""" Prints the tree with a preorder traversal """
+		def recurse(node):
+			if node is not None:
+				print(node.data, end=" ")
+				recurse(node.left)
+				recurse(node.right)
+
+		recurse(self._root)
+
+	def postorder(self):
+		""" Prints the tree with a postorder traversal """
+		def recurse(node):
+			if node is not None:
+				recurse(node.left)
+				recurse(node.right)
+				print(node.data, end=" ")
+
+		recurse(self._root)
+		
