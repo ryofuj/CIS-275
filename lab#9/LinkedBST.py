@@ -25,7 +25,10 @@ class LinkedBST(AbstractCollection):
 			else:
 				# Recursive Step 2: Move right
 				return recurse(node.right)
+
+		'''print how many Nodes were visited before the given item was found (or was determined to not be in the tree). Note: this function should only print one value, when the search is complete'''
 		return recurse(self._root)
+		# return recurse(self._root)
 
 
 	def add(self, item):
