@@ -86,3 +86,54 @@ class MinHeap(AbstractCollection):
 
       self._numitems -= 1
       return top_item
+
+   def __iter__(self):
+      """ Iterate over the items in the heap """
+      for i in range(self._size):
+         yield self._heap[i]
+
+   def __str__(self):
+      """ Return a string representation of the heap """
+      return str(self._heap)
+
+   def __len__(self):
+      """ Return the number of items in the heap """
+      return self._numitems
+
+   def __eq__(self, other):
+      """ Return True if the heap is equal to the other heap """
+      if self is other: return True
+      if type(self) != type(other): return False
+      if len(self) != len(other): return False
+      for i in range(len(self)):
+         if self._heap[i] != other._heap[i]:
+            return False
+      return True
+
+   def __ne__(self, other):
+      """ Return True if the heap is not equal to the other heap """
+      return not self.__eq__(other)
+
+   def __lt__(self, other):
+      """ Return True if the heap is less than the other heap """
+      if self is other: return False
+      if type(self) != type(other): return False
+      if len(self) != len(other): return False
+      for i in range(len(self)):
+         if self._heap[i] < other._heap[i]:
+            return True
+         elif self._heap[i] > other._heap[i]:
+            return False
+      return False
+
+   def __le__(self, other):
+      """ Return True if the heap is less than or equal to the other heap """
+      return self.__lt__(other) or self.__eq__(other)
+
+   def __gt__(self, other):
+      """ Return True if the heap is greater than the other heap """
+      return not self.__le__(other)
+
+   def __ge__(self, other):
+      """ Return True if the heap is greater than or equal to the other heap """
+      return not self.__lt__(other)

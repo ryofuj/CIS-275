@@ -10,23 +10,24 @@ from MaxHeap import MaxHeap
 from MinHeap import MinHeap
 
 def main():
-    # Create a list of 100 random numbers
+    # Create a list of 100 random values
     random_list = []
-    for count in range(100):
-        random_list.append(random.randint(1, 100))
+    for i in range(100):
+        random_list.append(random.randrange(1, 101))
 
     # Ask the user for a value of K
-    k = int(input("What value of K would you like to use? (1-100)"))
+    k = int(input("Enter a value for K: "))
 
-    # Create a MaxHeap from the list
+    # Create a MaxHeap and add the values from the list
     max_heap = MaxHeap()
-    for item in random_list:
-        max_heap.add(item)
+    for value in random_list:
+        max_heap.add(value)
 
-    # Print the K-largest numbers in the list
-    print("The K-largest numbers in the list are: ")
-    for count in range(k):
-        print(max_heap.pop(), end=" ")
+    # Print the K-largest values
+    print("The K-largest values are:")
+    for i in range(k):
+        print(max_heap.pop())
 
 if __name__ == "__main__":
     main()
+    
