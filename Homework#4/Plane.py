@@ -32,78 +32,75 @@ Record interesting statistics from your simulation in your final report
 If you do not like the results you are getting (a plane crashed, no planes were able to take off, etc.) feel free to tweak your numbers until the results are more realistic. 
 '''
 
-'''
-Ryo Fujimura
-CIS 275C
-Homework #4 Pt.3
-'''
-
-from PriorityQueue import PriorityQueue
-from Array import Array
-import random
-
+from ArrayQueue import ArrayQueue
+from random import randint
+from random import random
 
 class Plane:
     def __init__(self):
-        self.fuel = random.randint(5, 15)
-        self.transaction_time = random.randint(1, 3)
+        self.fuel = randint(5, 15)
+        self.transaction_time = randint(1, 3)
         self.time_in_queue = 0
 
     def __le__(self, other):
         return self.fuel <= other.fuel
 
-    def __str__(self):
-        return "Fuel: " + str(self.fuel) + ", Transaction Time: " + str(self.transaction_time) + ", Time in Queue: " + str(self.time_in_queue)
+    def __repr__(self):
+        return "Plane with {} fuel and {} transaction time".format(self.fuel, self.transaction_time)
+
+class Airport:
+    def __init__(self, landing_queue, takeoff_queue, landing_chance, takeoff_chance, clock_ticks):
+        self.landing_queue = landing_queue
+        self.takeoff_queue = takeoff_queue
+        self.landing_chance = landing_chance
+        self.takeoff_chance = takeoff_chance
+        self.clock_ticks = clock_ticks
+        self.current_plane = None
+        self.total_takeoff_time = 0
+        self.total_landing_time = 0
+        self.longest_takeoff_time = 0
+        self.longest_landing_time = 0
+        self.planes_taken_off = 0
+        self.planes_landed = 0
+
+    def run(self):
+        for i in range(self.clock_ticks):
+            if random() * 100 <= self.landing_chance:
+                self.landing_queue.add(Plane())
+            if random() * 100 <= self.takeoff_chance:
+                self.takeoff_queue.add(Plane())
+            if self.current_plane is None:
+                if not self.landing_queue.is_empty():
+                    self.current_plane = self.landing_queue.pop()
+                    self.planes_landed += 1
+                elif not self.takeoff_queue.is_empty():
+                    self.current_plane = self.takeoff_queue.pop()
+                    self.planes_taken_off += 1
+            else:
+                self.current_plane.transaction_time -= 1
+                if self.current_plane.transaction_time == 0:
+                    self.current_plane = None
+            for plane in self.landing_queue:
+                plane.time_in_queue += 1
+                if plane.fuel < plane.time_in_queue:
+                    print("Plane crashed!")
+                    return
+            for plane in self.takeoff_queue:
+                plane.time_in_queue += 1
+                if plane.fuel < plane.time_in_queue:
+                    print("Plane crashed!")
+                    return
+        print("Planes taken off: {}".format(self.planes_taken_off))
+        print("Planes landed: {}".format(self.planes_landed))
 
 def main():
-    takeoff_queue = PriorityQueue()
-    landing_queue = PriorityQueue()
-    runway = None
-    takeoff_wait_times = Array(0)
-    landing_wait_times = Array(0)
-    takeoff_time = 0
-    landing_time = 0
-    takeoff_count = 0
-    landing_count = 0
-    takeoff_chance = int(input("Enter the chance of a plane taking off each clock tick (1-100): "))
-    landing_chance = int(input("Enter the chance of a plane landing each clock tick (1-100): "))
-    clock_ticks = int(input("Enter the number of clock ticks to run the simulation for: "))
-    for i in range(clock_ticks):
-        if random.randint(1, 100) <= landing_chance:
-            landing_queue.add(Plane())
-        if random.randint(1, 100) <= takeoff_chance:
-            takeoff_queue.add(Plane())
-        if runway is None:
-            if not landing_queue.is_empty():
-                runway = landing_queue.pop()
-            elif not takeoff_queue.is_empty():
-                runway = takeoff_queue.pop()
-        else:
-            runway.transaction_time -= 1
-            if runway.transaction_time == 0:
-                if runway in landing_queue:
-                    landing_wait_times.append(runway.time_in_queue)
-                    landing_time += runway.time_in_queue
-                    landing_count += 1
-                else:
-                    takeoff_wait_times.append(runway.time_in_queue)
-                    takeoff_time += runway.time_in_queue
-                    takeoff_count += 1
-                runway = None
-        for plane in landing_queue:
-            plane.time_in_queue += 1
-            if plane.time_in_queue > plane.fuel:
-                print("A plane crashed!")
-                return
-        for plane in takeoff_queue:
-            plane.time_in_queue += 1
-    print("Average time spent waiting for takeoff: " + str(takeoff_time / takeoff_count))
-    print("Longest time spent waiting for takeoff: " + str(max(takeoff_wait_times)))
-    print("Average time spent waiting to land: " + str(landing_time / landing_count))
-    print("Longest time spent waiting to land: " + str(max(landing_wait_times)))
-    print("Did a plane crash? " + str(runway is not None and runway.time_in_queue > runway.fuel))
-    print("Total planes that took off and landed: " + str(landing_count + takeoff_count))
-    
+    landing_queue = ArrayQueue()
+    takeoff_queue = ArrayQueue()
+    landing_chance = int(input("Enter landing chance: "))
+    takeoff_chance = int(input("Enter takeoff chance: "))
+    clock_ticks = int(input("Enter number of clock ticks: "))
+    airport = Airport(landing_queue, takeoff_queue, landing_chance, takeoff_chance, clock_ticks)
+    airport.run()
+
 if __name__ == "__main__":
     main()
-    
