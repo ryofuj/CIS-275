@@ -1,5 +1,6 @@
 from AbstractCollection import AbstractCollection
 from BinaryNode import BinaryNode
+from LinkedQueue import LinkedQueue
 
 
 class LinkedBST(AbstractCollection):
@@ -83,3 +84,72 @@ class LinkedBST(AbstractCollection):
 				recurse(node.right)
 
 		recurse(self._root)
+
+	def getSmallest(self):
+		""" Returns the smallest element in the tree """
+		def recurse(node):
+			if node.left is None:
+				return node.data
+			else:
+				return recurse(node.left)
+
+		return recurse(self._root)
+
+	def getLargest(self):
+		""" Returns the largest element in the tree """
+		def recurse(node):
+			if node.right is None:
+				return node.data
+			else:
+				return recurse(node.right)
+
+		return recurse(self._root)
+
+	def height(self):
+		return self._root.height()
+
+	def breadth(self):
+		""" Prints the tree with a breadth-first traversal """
+		queue = LinkedQueue()
+		queue.add(self._root)
+		while not queue.is_empty():
+			node = queue.pop()
+			print(node.data, end=" ")
+			if node.left is not None:
+				queue.add(node.left)
+			if node.right is not None:
+				queue.add(node.right)
+
+
+	def is_balanced(self):
+		""" Returns True if the tree is balanced """
+		def recurse(node):
+			if node is None:
+				return 0
+			else:
+				left = recurse(node.left)
+				right = recurse(node.right)
+				if left == -1 or right == -1 or abs(left - right) > 1:
+					return -1
+				else:
+					return max(left, right) + 1
+
+		return recurse(self._root) != -1
+
+	def balance(self):
+		""" Balances the tree """
+		if not self.is_balanced():
+			# Create a list of the tree's elements
+			elements = []
+			def recurse(node):
+				if node is not None:
+					recurse(node.left)
+					elements.append(node.data)
+					recurse(node.right)
+			recurse(self._root)
+
+			# Create a new tree with the elements
+			self._root = None
+			self._size = 0
+			for element in elements:
+				self.add(element)
